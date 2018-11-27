@@ -1,4 +1,9 @@
 # Tetris keys
+<br>
+<br>
+Source file has been packaged into exe file, that can be run directly.<br>
+
+## Method of operation
 * press any key to start
 * press ↑ to rotate
 * press ← → to move
