@@ -1,4 +1,4 @@
-# Tetris keys
+# Tetris
 <br>
 <br>
 Source file has been packaged into exe file, that can be run directly.<br>
