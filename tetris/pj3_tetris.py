@@ -27,8 +27,11 @@ pygame.display.set_caption("Tetris")   # pygame窗口标题
 clock = pygame.time.Clock()  # pygame内置时钟
 FPS = 30
 
-score = 0
 level = 1
+score = 0
+temp = open('score.temp', 'r')  
+high_score = temp.read()  # 读取历史最高记录
+temp.close()
 
 screen_color_matrix = [[None] * GRID_NUM_WIDTH for i in range(GRID_NUM_HEIGHT)]
 # 游戏屏幕内小方格初始化，统一为None（15 × 25）
@@ -135,6 +138,7 @@ class CubeShape(object):
             #                   GRID_WIDTH, GRID_WIDTH),
             #                  1)
 
+            
 def draw_grids():  # 画网格线
     for i in range(GRID_NUM_WIDTH):
         pygame.draw.line(screen, LINE_COLOR,
@@ -148,6 +152,7 @@ def draw_grids():  # 画网格线
                      (GRID_WIDTH * GRID_NUM_WIDTH, 0),
                      (GRID_WIDTH * GRID_NUM_WIDTH, GRID_WIDTH * GRID_NUM_HEIGHT))
 
+    
 def draw_matrix():  # 画出屏幕内固定的方块
     for i, row in zip(range(GRID_NUM_HEIGHT), screen_color_matrix):
         for j, color in zip(range(GRID_NUM_WIDTH), row):
@@ -159,9 +164,12 @@ def draw_matrix():  # 画出屏幕内固定的方块
                 #             (j * GRID_WIDTH, i * GRID_WIDTH,
                 #              GRID_WIDTH, GRID_WIDTH), 2)
 
+                
 def draw_score():
     show_text(screen, 'SCORE:{}'.format(score), 20, WIDTH + SIDE_WIDTH // 2, 100)
-
+    show_text(screen, 'Best score:%s' % high_score, 20, WIDTH + SIDE_WIDTH // 2, 400)
+    
+    
 def remove_full_line():  # 满行消除
     global screen_color_matrix
     global score
@@ -174,7 +182,7 @@ def remove_full_line():  # 满行消除
         for j in range(GRID_NUM_WIDTH):  # 遍历游戏屏幕每一个小格
             if screen_color_matrix[i][j] is None:  # 只要第i行有一个格子是None
                 is_full = False  # 就判断为这一行没有满
-                continue  # 跳出子循环
+                break  # 跳出子循环
         if not is_full:  # 只要这一行没有满
             new_matrix[index] = screen_color_matrix[i]  # 新的游戏屏幕行就不变
             index -= 1 # 换下一行
@@ -184,6 +192,7 @@ def remove_full_line():  # 满行消除
     level = score // 20 + 1  # 游戏的难度设置
     screen_color_matrix = new_matrix  # 
 
+    
 def show_welcome(screen):
     show_text(screen, 'TETRIS', 30, WIDTH / 2, HEIGHT / 2)
     show_text(screen, 'Press any key to start', 20, WIDTH / 2, HEIGHT / 2 + 50)
@@ -228,6 +237,9 @@ while running:
             live_cube = CubeShape()  # 重新初始化，再生成新的骨牌
             if live_cube.conflict(live_cube.center):  # 如果初始生成的骨牌也冲突，游戏就结束
                 gameover = True
+                if score > int(high_score):  # 判断是否有新纪录产生
+                    high_score = score
+                    score_write(str(high_score))
                 score = 0
                 live_cube = None
                 screen_color_matrix = [[None] * GRID_NUM_WIDTH for i in range(GRID_NUM_HEIGHT)]
