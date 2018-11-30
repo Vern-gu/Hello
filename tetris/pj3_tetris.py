@@ -249,8 +249,12 @@ while running:
                 pause = 1
                 while pause:
                     for wait in pygame.event.get():
-                        if wait.key == pygame.K_SPACE:
-                            pause = 0
+                        try:
+                            if wait.key == pygame.K_SPACE:
+                                pause = 0
+                        except AttributeError:
+                            pass
+                    print(' ')
         remove_full_line()  # 初始化屏幕
 
     # level 是为了方便游戏的难度，level 越高 FPS // level 的值越小
