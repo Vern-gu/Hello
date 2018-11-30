@@ -224,6 +224,12 @@ while running:
             elif event.key == pygame.K_SPACE:
                 while live_cube.down() == True:
                     pass
+            elif event.key == pygame.K_ESCAPE:  # 定义暂停
+                pause = 1
+                while pause:
+                    for wait in pygame.event.get():
+                        if wait.key == pygame.K_SPACE:
+                            pause = 0
         remove_full_line()  # 初始化屏幕
 
     # level 是为了方便游戏的难度，level 越高 FPS // level 的值越小
