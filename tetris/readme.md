@@ -8,6 +8,8 @@ Source file has been packaged into exe file, that can be run directly.<br>
 * press ↑ to rotate
 * press ← → to move
 * press space to drop down
+* press escape to pause
+* press space again to continue
 <br>
 <br>
 referenced from https://www.jianshu.com/p/48f18db71f81
