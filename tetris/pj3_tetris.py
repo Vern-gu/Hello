@@ -2,6 +2,9 @@
 
 import pygame
 import random
+import os
+from pygame.locals import *
+
 
 pygame.init()
 GRID_WIDTH = 20  # 每小格宽度
@@ -29,12 +32,29 @@ FPS = 30
 
 level = 1
 score = 0
-temp = open('score.temp', 'r')  
-high_score = temp.read()  # 读取历史最高记录
-temp.close()
+high_score = 0
 
 screen_color_matrix = [[None] * GRID_NUM_WIDTH for i in range(GRID_NUM_HEIGHT)]
 # 游戏屏幕内小方格初始化，统一为None（15 × 25）
+
+
+def init_score():  # 初始化历史最高分，创建本地缓存存储分数
+    global high_score
+    file = os.path.exists("./score.temp")
+    if not file:
+        temp = open("score.temp", 'w')
+        temp.write("0")
+        temp.close()
+    temp = open('score.temp', 'r')
+    high_score = temp.read()
+    temp.close()
+    
+    
+def score_write(sco):  # 写入新成绩
+    temp = open('score.temp', 'w')
+    temp.write(sco)
+    temp.close()
+    
 
 def show_text(surf, text, size, x, y, color=WHITE):  # 设置显示文本方法
     font = pygame.font.SysFont('calibri', size)  # pygame文字字体
@@ -198,6 +218,7 @@ def show_welcome(screen):
     show_text(screen, 'Press any key to start', 20, WIDTH / 2, HEIGHT / 2 + 50)
 
 
+init_score（）
 running = True
 gameover = True
 counter = 0
@@ -237,7 +258,7 @@ while running:
     if gameover is False and counter % (FPS // level) == 0:
         # down 表示下移骨牌，返回False表示下移不成功，可能超过了屏幕或者和之前固定的
         # 小方块冲突了
-        if live_cube.down() == False:  # 方块持续下降
+        if live_cube.down() == False:  # 方块持续下降，直到不能下降为止
             for cube in live_cube.get_all_gridpos():
                 screen_color_matrix[cube[0]][cube[1]] = live_cube.color
             live_cube = CubeShape()  # 重新初始化，再生成新的骨牌
